@@ -1,0 +1,21 @@
+
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: my_password
+    ports:
+      - "5432:5432"
+  app:
+    build: .
+    command: ["./wait-for-it.sh", "db:5432", "--", "go", "run", "main.go"]
+    volumes:
+      - .:/go/src/app
+    ports:
+      - "8093:8093"
+    depends_on:
+      - db
+    links:
+      - db
