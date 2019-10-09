@@ -6,6 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-pg/pg v8.0.6+incompatible
 	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/joho/godotenv v1.3.0
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc // indirect
 	golang.org/x/net v0.0.0-20191007182048-72f939374954 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect

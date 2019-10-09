@@ -4,6 +4,7 @@ import (
 	"github.com/go-pg/pg"
 	"github.com/go-pg/pg/orm"
 	"github.com/TRileySchwarz/go-database/models"
+	"os"
 )
 
 // The globally accessible database object
@@ -14,8 +15,9 @@ var DataBase *pg.DB
 func InitDatabase() error {
 	// Update this with your database options ie password and userName
 	DataBase = pg.Connect(&pg.Options{
-		User:     "postgres",
-		Password: "my_password",
+		User:     os.Getenv("POSTGRES_USER"),
+		Password: os.Getenv("POSTGRES_PASSWORD"),
+		Addr: "db:5432",
 	})
 
 	err := createSchema(DataBase)
