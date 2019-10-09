@@ -13,10 +13,13 @@ func main() {
 
 	// Load the environment variables, this is where things like api keys should be stored.
 	// Can also store constants shared by multiple services
-	godotenv.Load()
+	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
 
 	// Initialize the database and create corresponding rows
-	err := db.InitDatabase()
+	err = db.InitDatabase()
 	if err != nil {
 		fmt.Printf("There is db error: %v", err)
 	}
