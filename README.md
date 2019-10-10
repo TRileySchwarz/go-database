@@ -18,5 +18,5 @@ This project contains a Golang database implementation that serves as an example
 - Password verification of difficulty, eg. longer than 10 characters
 - Verify Volume files are working as intended
 - Write postman tests
-
+- Setup docker envrionment in golang
 

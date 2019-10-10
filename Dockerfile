@@ -2,7 +2,7 @@
 FROM golang:latest
 
 # Add Maintainer Info
-LABEL maintainer="T. Riley Schwarz <trileyschwarz@gmail.com@gmail.com>"
+LABEL maintainer="ChadChillBro7 <trileyschwarz@gmail.com@gmail.com>"
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
@@ -19,7 +19,7 @@ COPY . .
 # Build the Go app
 RUN go build -o main .
 
-# Expose port 8093 to the outside world
+# Expose port 8093/5432 to the outside world
 EXPOSE 8093
 EXPOSE 5432
 

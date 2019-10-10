@@ -10,7 +10,6 @@ import (
 )
 
 func main() {
-
 	// Load the environment variables, this is where things like api keys should be stored.
 	// Can also store constants shared by multiple services
 	err := godotenv.Load()
@@ -21,16 +20,16 @@ func main() {
 	// Initialize the database and create corresponding rows
 	err = db.InitDatabase()
 	if err != nil {
-		fmt.Printf("There is db error: %v", err)
+		fmt.Printf("\nThere is db error on initialize: %v", err)
+	} else {
+		fmt.Println("Connection to the database successful")
 	}
-
-	fmt.Println("Connection to the database successful")
 
 	// Defer closing the database when the program exits
 	defer func() {
 		err = db.DataBase.Close()
 		if err != nil {
-			fmt.Printf("There is db error on close: %v", err)
+			fmt.Printf("\nThere is db error on close: %v", err)
 		}
 	}()
 
