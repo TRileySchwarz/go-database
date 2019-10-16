@@ -3,10 +3,11 @@ package routes
 import (
 	"encoding/json"
 	"errors"
+	"golang.org/x/crypto/bcrypt"
 
+	"github.com/TRileySchwarz/go-database/auth"
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/models"
-	"github.com/TRileySchwarz/go-database/webtoken"
 
 	"io/ioutil"
 	"net/http"
@@ -60,13 +61,14 @@ func verifyLoginDetails(loginDetails models.LoginRequest) (models.WebTokenRespon
 		return models.WebTokenResponse{}, err
 	}
 
-	// Check that the supplied password matches the one we have stored in the DB
-	if loginDetails.Password != user.Password {
+	// Compare the hashed password with the one stored
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDetails.Password))
+	if err != nil {
 		return models.WebTokenResponse{}, errors.New("invalid login credentials")
 	}
 
 	// Generates a web token string
-	tokenString, err := webtoken.GenerateJWT(user.ID)
+	tokenString, err := auth.GenerateJWT(user.ID)
 	if err != nil {
 		return models.WebTokenResponse{}, err
 	}

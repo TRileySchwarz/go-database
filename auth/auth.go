@@ -1,7 +1,8 @@
-package webtoken
+package auth
 
 import (
 	"errors"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 
 	"github.com/TRileySchwarz/go-database/models"
@@ -54,3 +55,9 @@ func VerifyWebToken(webToken string) (string, error) {
 
 	return claims.Username, nil
 }
+
+// HashPassword converts a user password into hashed version stored in the db
+func HashPassword(password string) ([]byte, error) {
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+}
+

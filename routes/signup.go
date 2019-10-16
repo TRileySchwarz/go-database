@@ -7,7 +7,7 @@ import (
 
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/models"
-	"github.com/TRileySchwarz/go-database/webtoken"
+	"github.com/TRileySchwarz/go-database/auth"
 )
 
 // HandleSignUp allows a new user to register for the system. 
@@ -25,6 +25,13 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+
+	// hash the submitted password so its not stored in plain text
+	hashedPass, err := auth.HashPassword(user.Password)
+	if err != nil {
+		panic(err)
+	}
+	user.Password = string(hashedPass)
 
 	// Pass the new User data to the database and attempt to insert it
 	jwt, err := SignUpUser(&user)
@@ -55,7 +62,7 @@ func SignUpUser(user *models.User) (models.WebTokenResponse, error) {
 		panic(err)
 	}
 
-	tokenString, err := webtoken.GenerateJWT(user.ID)
+	tokenString, err := auth.GenerateJWT(user.ID)
 	if err != nil {
 		return models.WebTokenResponse{}, err
 	}

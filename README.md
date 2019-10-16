@@ -92,7 +92,6 @@ The payload:
 
 ### TODO
 
-- Add password hashing so they are not stored in plain text
 - Implement rate limit for ip
 - Add better error handling
 - Add automated testing for docker-compose updates
@@ -103,4 +102,5 @@ The payload:
 - Password verification of difficulty, eg. longer than 10 characters
 - Verify Volume files are working as intended
 - Write postman tests
+- Remove panics in favour of useful error messages
 

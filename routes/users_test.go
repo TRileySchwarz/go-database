@@ -47,13 +47,16 @@ var TestUsersNoPwd = []models.UserNoPwd{{
 	},
 }
 
+// Verifies the GET /users route is working as intended
+// Does not test the unhappy path
 func TestUsersGet(t *testing.T) {
-	// Connect to the database
+	// Connect/Initialize to the database
 	err := db.InitLocalDatabase()
 	if err != nil {
 		t.Fatalf("Could not initialize database connection: %v", err)
 	}
 
+	// Populate the database with test data
 	jwts := populateDatabase(t)
 
 	// Iterate through the tokens and get the user database ensuring that all jwts work as intended
@@ -64,6 +67,7 @@ func TestUsersGet(t *testing.T) {
 			t.Fatalf("Could not encode user: %v", err)
 		}
 
+		// Mock a request
 		req, err := http.NewRequest("GET", "localhost:8080/users", nil)
 		if err != nil {
 			t.Fatalf("Could not create request: %v", err)
@@ -82,27 +86,33 @@ func TestUsersGet(t *testing.T) {
 			}
 		}()
 
+		// Verify correct status code was received
 		if res.StatusCode != http.StatusOK {
 			t.Errorf("expected status OK; got %v", res.StatusCode)
 		}
 
+		// Parse body of the response
 		body, err := ioutil.ReadAll(res.Body)
 		if err != nil {
 			t.Fatalf("there was an error reading the body of response: %v", err)
 		}
 
+		// Unmarshal the body so we can verify its contents
 		var response []models.UserNoPwd
 		err = json.Unmarshal(body, &response)
 		if err != nil {
 			t.Fatalf("there was an error marshalling the body of the response: %v", err)
 		}
 
+		// Ensure the response matches up as intended
 		if !reflect.DeepEqual(response, TestUsersNoPwd) {
 			t.Errorf("expected response %v: got %v\n", TestUsersNoPwd, response)
 		}
 	}
 }
 
+// Verifies the PUT /users route is working as intended
+// Does not test the unhappy path
 func TestUsersPut(t *testing.T) {
 	// Connect to the database
 	err := db.InitLocalDatabase()
@@ -110,12 +120,8 @@ func TestUsersPut(t *testing.T) {
 		t.Fatalf("Could not initialize database connection: %v", err)
 	}
 
-	user := models.User{
-		ID:        "Chad@gmail.com",
-		Password:  "thisIsABadPassword",
-		FirstName: "Chad",
-		LastName:  "Chillerton",
-	}
+	// Copy over test user
+	user := TestUser
 
 	// Signup user and return a valid JWT
 	jwt, err := routes.SignUpUser(&user)
@@ -152,6 +158,7 @@ func TestUsersPut(t *testing.T) {
 		}
 	}()
 
+	// Verify correct status code was received
 	if res.StatusCode != http.StatusOK {
 		t.Errorf("expected status OK; got %v", res.StatusCode)
 	}
@@ -165,17 +172,20 @@ func TestUsersPut(t *testing.T) {
 
 	rec = httptest.NewRecorder()
 	routes.HandleUsers(rec, req)
-
 	res = rec.Result()
+
+	// Verify correct status code was received
 	if res.StatusCode != http.StatusOK {
 		t.Errorf("expected status OK; got %v", res.StatusCode)
 	}
 
+	// Parse body of the response
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		t.Fatalf("there was an error reading the body of response: %v", err)
 	}
 
+	// Unmarshal the body so we can verify its contents
 	var response []models.UserNoPwd
 	err = json.Unmarshal(body, &response)
 	if err != nil {
@@ -190,6 +200,7 @@ func TestUsersPut(t *testing.T) {
 		},
 	}
 
+	// Ensure the corresponding email address matches up
 	if !reflect.DeepEqual(response, userExpected) {
 		t.Errorf("expected response %v: got %v\n", userExpected, response)
 	}

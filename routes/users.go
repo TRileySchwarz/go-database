@@ -7,7 +7,7 @@ import (
 
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/models"
-	"github.com/TRileySchwarz/go-database/webtoken"
+	"github.com/TRileySchwarz/go-database/auth"
 )
 
 // HandleUsers switches on the GET and PUT requests to provide users access
@@ -15,7 +15,7 @@ import (
 func HandleUsers(w http.ResponseWriter, r *http.Request) {
 	// Pull out the email to the corresponding web token
 	webTokenString := r.Header.Get("x-authentication-token")
-	email, err := webtoken.VerifyWebToken(webTokenString)
+	email, err := auth.VerifyWebToken(webTokenString)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
