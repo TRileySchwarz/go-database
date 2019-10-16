@@ -4,14 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/TRileySchwarz/go-database/db"
-	"github.com/TRileySchwarz/go-database/models"
-	"github.com/TRileySchwarz/go-database/routes"
-	"github.com/TRileySchwarz/go-database/webToken"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/TRileySchwarz/go-database/db"
+	"github.com/TRileySchwarz/go-database/models"
+	"github.com/TRileySchwarz/go-database/routes"
+	"github.com/TRileySchwarz/go-database/webtoken"
 )
 
 func TestLogin(t *testing.T) {
@@ -33,9 +34,8 @@ func TestLogin(t *testing.T) {
 		t.Fatalf("Could not signup user to DB: %v", err)
 	}
 
-
 	loginDetails := models.LoginRequest{
-		Email:   user.ID,
+		Email:    user.ID,
 		Password: user.Password,
 	}
 
@@ -76,7 +76,7 @@ func TestLogin(t *testing.T) {
 		t.Fatalf("there was an error marshalling the body of the response: %v", err)
 	}
 
-	email, err := webToken.VerifyWebToken(response.Token)
+	email, err := webtoken.VerifyWebToken(response.Token)
 	if err != nil {
 		t.Fatalf("there was an error verifying the web token response: %v", err)
 	}

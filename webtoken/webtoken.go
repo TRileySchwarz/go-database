@@ -1,10 +1,11 @@
-package webToken
+package webtoken
 
 import (
 	"errors"
+	"time"
+
 	"github.com/TRileySchwarz/go-database/models"
 	"github.com/dgrijalva/jwt-go"
-	"time"
 )
 
 // The secret JWT token key used

@@ -2,18 +2,20 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/TRileySchwarz/go-database/db"
-	"github.com/TRileySchwarz/go-database/webToken"
-	"github.com/TRileySchwarz/go-database/models"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/TRileySchwarz/go-database/db"
+	"github.com/TRileySchwarz/go-database/models"
+	"github.com/TRileySchwarz/go-database/webtoken"
 )
 
-// Handles the users route and switched on the
+// HandleUsers switches on the GET and PUT requests to provide users access
+// to changing their information, or returning all user data
 func HandleUsers(w http.ResponseWriter, r *http.Request) {
 	// Pull out the email to the corresponding web token
 	webTokenString := r.Header.Get("x-authentication-token")
-	email, err := webToken.VerifyWebToken(webTokenString)
+	email, err := webtoken.VerifyWebToken(webTokenString)
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
@@ -71,7 +73,7 @@ func getUsers() ([]models.User, error) {
 func removePasswords(users []models.User) []models.UserNoPwd {
 	var usersToReturn []models.UserNoPwd
 
-	for k :=range users {
+	for k := range users {
 		userToAppend := models.UserNoPwd{
 			Email:     users[k].ID,
 			FirstName: users[k].FirstName,

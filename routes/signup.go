@@ -2,13 +2,16 @@ package routes
 
 import (
 	"encoding/json"
-	"github.com/TRileySchwarz/go-database/db"
-	"github.com/TRileySchwarz/go-database/models"
-	"github.com/TRileySchwarz/go-database/webToken"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/TRileySchwarz/go-database/db"
+	"github.com/TRileySchwarz/go-database/models"
+	"github.com/TRileySchwarz/go-database/webtoken"
 )
 
+// HandleSignUp allows a new user to register for the system. 
+// The email can only be used once ie. unique
 func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	// Read the request body
 	body, err := ioutil.ReadAll(r.Body)
@@ -44,14 +47,15 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Helper used to signup a user in the DB, returns the corresponding JWT with those details
+// SignUpUser is a helper used to signup a user in the DB, 
+// returns the corresponding JWT with those details
 func SignUpUser(user *models.User) (models.WebTokenResponse, error) {
 	err := db.DataBase.Insert(user)
 	if err != nil {
 		panic(err)
 	}
 
-	tokenString, err := webToken.GenerateJWT(user.ID)
+	tokenString, err := webtoken.GenerateJWT(user.ID)
 	if err != nil {
 		return models.WebTokenResponse{}, err
 	}

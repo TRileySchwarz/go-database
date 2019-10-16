@@ -3,14 +3,16 @@ package routes
 import (
 	"encoding/json"
 	"errors"
+
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/models"
-	"github.com/TRileySchwarz/go-database/webToken"
+	"github.com/TRileySchwarz/go-database/webtoken"
 
 	"io/ioutil"
 	"net/http"
 )
 
+// HandleLogin provides users the ability to submit a login request and returns a JWT if succesful
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	// Read the request body
 	body, err := ioutil.ReadAll(r.Body)
@@ -56,15 +58,15 @@ func verifyLoginDetails(loginDetails models.LoginRequest) (models.WebTokenRespon
 	err := db.DataBase.Select(user)
 	if err != nil {
 		return models.WebTokenResponse{}, err
-	} else {
-		// Check that the supplied password matches the one we have stored in the DB
-		if loginDetails.Password != user.Password {
-			return models.WebTokenResponse{}, errors.New("invalid login credentials")
-		}
+	}
+
+	// Check that the supplied password matches the one we have stored in the DB
+	if loginDetails.Password != user.Password {
+		return models.WebTokenResponse{}, errors.New("invalid login credentials")
 	}
 
 	// Generates a web token string
-	tokenString, err := webToken.GenerateJWT(user.ID)
+	tokenString, err := webtoken.GenerateJWT(user.ID)
 	if err != nil {
 		return models.WebTokenResponse{}, err
 	}
