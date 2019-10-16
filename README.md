@@ -4,14 +4,12 @@ This project contains a Golang database implementation that serves as an example
 This API defaults to port 8080 for the app, and 5432 with the postgres. Ensure these ports are not in use.
 The payloads are to be sent via a raw transaction, not URL encoded etc. 
 
-
-## Running API
 From the project root
 
 ```$ docker-compose up```
 
 
-Test can be run locally\
+Test can be run locally
 
 ``` $ go test ./...```
 
