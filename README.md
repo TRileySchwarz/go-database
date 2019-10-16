@@ -1,12 +1,28 @@
 # go-database
 This project contains a Golang database implementation that serves as an example to how someone might look at implementing docker / postgres / JWT etc. 
 
+This API defaults to port 8080 for the app, and 5432 with the postgres. Ensure these ports are not in use.
+The payloads are to be sent via a raw transaction, not URL encoded etc. 
 
 
-## API Specs
+## Running API
+From the project root
+
+```$ docker-compose up```
+
+
+Test can be run locally\
+
+``` $ go test ./...```
+
+
+
+
+
+# API Documentation
 
 ### `POST /signup`
-Endpoint to create an user row in postgres db. The payload should have the following fields:
+Endpoint to create an user row in postgres db.where `email` is an unique key in the database. The payload should have the following fields:
 
 ```json
 {
@@ -17,8 +33,6 @@ Endpoint to create an user row in postgres db. The payload should have the follo
 }
 ```
 
-where `email` is an unique key in the database.
-
 The response body returns a JWT on success that can be used for other endpoints:
 
 ```json
@@ -27,7 +41,8 @@ The response body returns a JWT on success that can be used for other endpoints:
 }
 ```
 
-### `POST /login`
+### `POST /login` 
+
 Endpoint to log an user in. 
 
 The payload:
@@ -73,12 +88,11 @@ The payload:
   "firstName": "NewFirstName",
   "lastName": "NewLastName"
 }
+```
 
 
 
-
-
-## TODO
+### TODO
 
 - Add password hashing so they are not stored in plain text
 - Implement rate limit for ip
