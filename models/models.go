@@ -1,12 +1,22 @@
 package models
 
-import "github.com/dgrijalva/jwt-go"
+import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/satori/go.uuid"
+)
 
 type User struct {
 	ID        string `json:"email" pg:",unique"`
 	Password  string `json:"password"`
 	FirstName string `json:"firstName"`
 	LastName  string `json:"lastName"`
+}
+
+type Msg struct {
+	ID                   uuid.UUID `json:"id" pg:",unique, type:uuid default uuid_generate_v4()"`
+	Msg string `json:"msg"`
+	Sender User `json:"sender" pg:"fk:id"`
+	Timestamp uint `json:"timestamp"`
 }
 
 type UserNoPwd struct {

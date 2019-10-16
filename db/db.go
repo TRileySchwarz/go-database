@@ -24,6 +24,18 @@ func InitDatabase() error {
 	return nil
 }
 
+func InitLocalDatabase() error {
+	//Init connection to the database
+	ConnectLocalDatabase()
+
+	err := createSchema(DataBase)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func ConnectDatabase() {
 	// Update this with your database options ie password and userName
 	DataBase = pg.Connect(&pg.Options{
@@ -32,6 +44,16 @@ func ConnectDatabase() {
 		Addr: "db:5432",
 	})
 }
+
+
+func ConnectLocalDatabase() {
+	// Update this with your database options ie password and userName
+	DataBase = pg.Connect(&pg.Options{
+		User:     "postgres",
+		Password: "my_password",
+	})
+}
+
 
 // Creates the schema the database will be using, ie rows. This could be done via automated migrations
 // or it can be done inside of the main go app like this.

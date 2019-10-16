@@ -24,7 +24,7 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Pass the new User data to the database and attempt to insert it
-	jwt, err := signUpUser(&user)
+	jwt, err := SignUpUser(&user)
 	if err != nil {
 		panic(err)
 	}
@@ -45,7 +45,7 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 // Helper used to signup a user in the DB, returns the corresponding JWT with those details
-func signUpUser(user *models.User) (models.WebTokenResponse, error) {
+func SignUpUser(user *models.User) (models.WebTokenResponse, error) {
 	err := db.DataBase.Insert(user)
 	if err != nil {
 		panic(err)
