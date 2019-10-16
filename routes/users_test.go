@@ -61,12 +61,6 @@ func TestUsersGet(t *testing.T) {
 
 	// Iterate through the tokens and get the user database ensuring that all jwts work as intended
 	for _, token := range jwts {
-		b := new(bytes.Buffer)
-		err = json.NewEncoder(b).Encode(token)
-		if err != nil {
-			t.Fatalf("Could not encode user: %v", err)
-		}
-
 		// Mock a request
 		req, err := http.NewRequest("GET", "localhost:8080/users", nil)
 		if err != nil {
@@ -129,19 +123,14 @@ func TestUsersPut(t *testing.T) {
 		t.Fatalf("Could not signup user to DB: %v", err)
 	}
 
-	// Encode the new body data, ie user first name / last name changes
-	// Simply swap last name and first name positions
-	b := new(bytes.Buffer)
-	err = json.NewEncoder(b).Encode(models.PutUserRequest{
-		FirstName: user.LastName,
-		LastName:  user.FirstName,
+	// Swap the first and last names
+	requestByte, _ := json.Marshal(models.PutUserRequest{
+		FirstName: TestUser.LastName,
+		LastName:  TestUser.FirstName,
 	})
-	if err != nil {
-		t.Fatalf("Could not encode user: %v", err)
-	}
 
 	// Create new request
-	req, err := http.NewRequest("PUT", "localhost:8080/users", b)
+	req, err := http.NewRequest("PUT", "localhost:8080/users", bytes.NewReader(requestByte))
 	if err != nil {
 		t.Fatalf("Could not create request: %v", err)
 	}
@@ -194,9 +183,9 @@ func TestUsersPut(t *testing.T) {
 
 	// The expected result with the first and last name switched
 	userExpected := []models.UserNoPwd{{
-			Email:     user.ID,
-			FirstName: user.LastName,
-			LastName:  user.FirstName,
+			Email:     TestUser.ID,
+			FirstName: TestUser.LastName,
+			LastName:  TestUser.FirstName,
 		},
 	}
 

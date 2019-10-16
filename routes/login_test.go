@@ -48,17 +48,11 @@ func TestLogin(t *testing.T) {
 	}
 
 	// Mock a login request to simulate attempt
-	loginDetails := models.LoginRequest{
+	requestByte, _ := json.Marshal(models.LoginRequest{
 		Email:    TestUser.ID,
 		Password: TestUser.Password,
-	}
-	b := new(bytes.Buffer)
-	err = json.NewEncoder(b).Encode(loginDetails)
-	if err != nil {
-		t.Fatalf("Could not encode login details: %v", err)
-	}
-
-	req, err := http.NewRequest("POST", "localhost:8080/login", b)
+	})
+	req, err := http.NewRequest("POST", "localhost:8080/login", bytes.NewReader(requestByte))
 	if err != nil {
 		t.Fatalf("Could not create request: %v", err)
 	}

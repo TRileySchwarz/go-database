@@ -24,18 +24,9 @@ func TestSignUp(t *testing.T) {
 		t.Fatalf("Could not initialize database connection: %v", err)
 	}
 
-	// Copy over test user
-	user := TestUser
-
-	// Encode the data for the request body
-	b := new(bytes.Buffer)
-	err = json.NewEncoder(b).Encode(user)
-	if err != nil {
-		t.Fatalf("Could not encode user: %v", err)
-	}
-
 	// Mock a request
-	req, err := http.NewRequest("POST", "localhost:8080/signup", b)
+	requestByte, _ := json.Marshal(TestUser)
+	req, err := http.NewRequest("POST", "localhost:8080/signup", bytes.NewReader(requestByte))
 	if err != nil {
 		t.Fatalf("Could not create request: %v", err)
 	}
@@ -76,7 +67,7 @@ func TestSignUp(t *testing.T) {
 	}
 
 	// Ensure the corresponding email address matches up
-	if email != user.ID {
-		t.Errorf("expected the users email: %v; got %v", user.ID, email)
+	if email != TestUser.ID {
+		t.Errorf("expected the users email: %v; got %v", TestUser.ID, email)
 	}
 }
