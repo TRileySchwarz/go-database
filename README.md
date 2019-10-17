@@ -98,7 +98,6 @@ The payload:
 - Nginx reverse proxy 
 - Forward DNS
 - Build exec watcher to auto docker-compose build
-- Password verification of difficulty, eg. longer than 10 characters
 - Verify Volume files are working as intended
 - Write postman tests
 - Provide command line args for port numbers

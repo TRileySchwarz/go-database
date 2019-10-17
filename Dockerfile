@@ -19,8 +19,8 @@ COPY . .
 # Build the Go app
 RUN go build -o main .
 
-# Expose port 8093/5432 to the outside world
-EXPOSE 8093
+# Expose port 8080/5432 to the outside world
+EXPOSE 8080
 EXPOSE 5432
 
 # Command to run the executable

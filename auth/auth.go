@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"golang.org/x/crypto/bcrypt"
+	"regexp"
 	"time"
 
 	"github.com/TRileySchwarz/go-database/models"
@@ -13,7 +14,10 @@ import (
 var jwtKey = []byte("tokenKey")
 
 // This represents the amount of time a JWT is valid for
-var authDuration = time.Duration(10 * time.Minute)
+var authDuration = 10 * time.Minute
+
+// Indicates the minimum password strength for a pass to be considered valid
+var MinPassStrength = 5
 
 // Generates a new JWT using the userEmail / ID
 func GenerateJWT(userEmail string) (string, error) {
@@ -60,4 +64,53 @@ func VerifyWebToken(webToken string) (string, error) {
 func HashPassword(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
+
+
+// The password complexity functions are derived from the following library:
+// https://github.com/briandowns/GoPasswordUtilities
+type Password struct {
+	Pass            string
+	Length          int
+	Score           int
+	ContainsUpper   bool
+	ContainsLower   bool
+	ContainsNumber  bool
+	ContainsSpecial bool
+	ContainsLength bool
+}
+
+// ProcessPassword will parse the password and populate the Password struct attributes.
+func ProcessPassword(password string) *Password {
+	p := &Password{Pass: password, Length: len(password)}
+
+	matchLower := regexp.MustCompile(`[a-z]`)
+	matchUpper := regexp.MustCompile(`[A-Z]`)
+	matchNumber := regexp.MustCompile(`[0-9]`)
+	matchSpecial := regexp.MustCompile(`[\!\@\#\$\%\^\&\*\(\\\)\-_\=\+\,\.\?\/\:\;\{\}\[\]~]`)
+
+	if p.Length >= 8 {
+		p.ContainsLength = true
+		p.Score++
+	}
+	if matchLower.MatchString(p.Pass) {
+		p.ContainsLower = true
+		p.Score++
+	}
+	if matchUpper.MatchString(p.Pass) {
+		p.ContainsUpper = true
+		p.Score++
+	}
+	if matchNumber.MatchString(p.Pass) {
+		p.ContainsNumber = true
+		p.Score++
+	}
+	if matchSpecial.MatchString(p.Pass) {
+		p.ContainsSpecial = true
+		p.Score++
+	}
+
+	return p
+}
+
+
 

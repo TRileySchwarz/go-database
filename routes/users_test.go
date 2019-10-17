@@ -18,17 +18,17 @@ import (
 
 var TestUsers = []models.User{{
 		ID:        "Piccolo@gmail.com",
-		Password:  "thisIsABadPassword",
+		Password:  "thisIsABadPassword1!",
 		FirstName: "Piccolo",
 		LastName:  "1",
 	}, {
 		ID:        "Goku@gmail.com",
-		Password:  "thisIsAHorriblePassword",
+		Password:  "thisIsAHorriblePassword1!",
 		FirstName: "Goku",
 		LastName:  "2",
 	}, {
 		ID:        "Frieza@gmail.com",
-		Password:  "thisIsATerriblePassword",
+		Password:  "thisIsATerriblePassword1!",
 		FirstName: "Frieza",
 		LastName:  "3",
 	},

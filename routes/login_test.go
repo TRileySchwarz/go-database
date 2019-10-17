@@ -19,7 +19,7 @@ import (
 
 var TestUser = models.User{
 	ID:        "Chad@gmail.com",
-	Password:  "thisIsABadPassword",
+	Password:  "thisIsABadPassword1!",
 	FirstName: "Chad",
 	LastName:  "Chillerton",
 }

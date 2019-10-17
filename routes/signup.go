@@ -29,6 +29,13 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Verify the passwords strength
+	pass := auth.ProcessPassword(user.Password)
+	if pass.Score  <  auth.MinPassStrength {
+		SetResponse(w, errors.New("Password is not strong enough"), http.StatusBadRequest)
+		return
+	}
+
 	// hash the submitted password so its not stored in plain text
 	hashedPass, err := auth.HashPassword(user.Password)
 	if err != nil {
