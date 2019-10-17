@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 
@@ -17,8 +18,7 @@ func HandleUsers(w http.ResponseWriter, r *http.Request) {
 	webTokenString := r.Header.Get("x-authentication-token")
 	email, err := auth.VerifyWebToken(webTokenString)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		SetResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -29,8 +29,7 @@ func HandleUsers(w http.ResponseWriter, r *http.Request) {
 		handlePutUsers(w, r, email)
 	} else {
 		// Signal a bad request was sent, ie. not a get or put
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		SetResponse(w, errors.New("invalid method used"), http.StatusBadRequest)
 	}
 }
 
@@ -38,7 +37,8 @@ func HandleUsers(w http.ResponseWriter, r *http.Request) {
 func handleGetUsers(w http.ResponseWriter) {
 	u, err := getUsers()
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Remove all the passwords from the struct before returning it
@@ -47,14 +47,16 @@ func handleGetUsers(w http.ResponseWriter) {
 	// Marshal the response before returning it
 	respJSON, err := json.Marshal(resp)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(respJSON)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 }
 
@@ -63,7 +65,7 @@ func getUsers() ([]models.User, error) {
 	var u []models.User
 	err := db.DataBase.Model(&u).Select()
 	if err != nil {
-		return nil, err
+		return nil, errors.New("issue retrieving all the users from db")
 	}
 
 	return u, nil
@@ -91,20 +93,23 @@ func handlePutUsers(w http.ResponseWriter, r *http.Request, email string) {
 	// Read the request body
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Unmarshal the request body into our User struct
 	var newUserInfo models.PutUserRequest
 	err = json.Unmarshal(body, &newUserInfo)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Update the user info in the database
 	err = updateUser(email, &newUserInfo)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -117,7 +122,7 @@ func updateUser(email string, request *models.PutUserRequest) error {
 	user := &models.User{ID: email}
 	err := db.DataBase.Select(user)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "issue locating the user information")
 	}
 
 	// Update fields
@@ -127,7 +132,7 @@ func updateUser(email string, request *models.PutUserRequest) error {
 	// Apply the updated user struct to the database
 	err = db.DataBase.Update(user)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "issue updating the users info")
 	}
 
 	return nil

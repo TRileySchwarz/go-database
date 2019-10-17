@@ -9,6 +9,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/juju/httprequest v2.0.0+incompatible
 	github.com/julienschmidt/httprouter v1.3.0 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/satori/go.uuid v1.2.0
 	golang.org/x/crypto v0.0.0-20191002192127-34f69633bfdc
 	golang.org/x/net v0.0.0-20191007182048-72f939374954 // indirect

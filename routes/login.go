@@ -2,7 +2,7 @@ package routes
 
 import (
 	"encoding/json"
-	"errors"
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/TRileySchwarz/go-database/auth"
@@ -18,29 +18,31 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	// Read the request body
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Unmarshal the request details
 	var loginDetails models.LoginRequest
 	err = json.Unmarshal(body, &loginDetails)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Verify the login details and return a new json web token string
-	// Shouldnt crash the system if the login fails, hence no panic(err)
+	// Should not crash the system if the login fails, hence no panic(err)
 	jwt, err := verifyLoginDetails(loginDetails)
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
+		SetResponse(w, err, http.StatusBadRequest)
 		return
 	}
 
 	// Marshal teh web token response
 	responseJSON, err := json.Marshal(jwt)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Set the response header and write the body payload
@@ -48,7 +50,7 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(responseJSON)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
 	}
 }
 
@@ -58,19 +60,20 @@ func verifyLoginDetails(loginDetails models.LoginRequest) (models.WebTokenRespon
 	user := &models.User{ID: loginDetails.Email}
 	err := db.DataBase.Select(user)
 	if err != nil {
-		return models.WebTokenResponse{}, err
+		return models.WebTokenResponse{}, errors.Wrap(err, "invalid user email")
+
 	}
 
 	// Compare the hashed password with the one stored
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginDetails.Password))
 	if err != nil {
-		return models.WebTokenResponse{}, errors.New("invalid login credentials")
+		return models.WebTokenResponse{}, errors.Wrap(err, "invalid login credentials")
 	}
 
 	// Generates a web token string
 	tokenString, err := auth.GenerateJWT(user.ID)
 	if err != nil {
-		return models.WebTokenResponse{}, err
+		return models.WebTokenResponse{}, errors.Wrap(err, "failed to generate web token")
 	}
 
 	return models.WebTokenResponse{Token: tokenString}, nil

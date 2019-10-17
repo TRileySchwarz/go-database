@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 
@@ -16,33 +17,38 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	// Read the request body
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Unmarshal the request body into our User struct
 	var user models.User
 	err = json.Unmarshal(body, &user)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// hash the submitted password so its not stored in plain text
 	hashedPass, err := auth.HashPassword(user.Password)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 	user.Password = string(hashedPass)
 
 	// Pass the new User data to the database and attempt to insert it
 	jwt, err := SignUpUser(&user)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Marshal the web token response
 	responseJSON, err := json.Marshal(jwt)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
+		return
 	}
 
 	// Set the response header and write the body payload
@@ -50,7 +56,7 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	_, err = w.Write(responseJSON)
 	if err != nil {
-		panic(err)
+		SetResponse(w, err, http.StatusBadRequest)
 	}
 }
 
@@ -59,12 +65,12 @@ func HandleSignUp(w http.ResponseWriter, r *http.Request) {
 func SignUpUser(user *models.User) (models.WebTokenResponse, error) {
 	err := db.DataBase.Insert(user)
 	if err != nil {
-		panic(err)
+		return models.WebTokenResponse{}, errors.Wrap(err, "Issue inserting the user into db")
 	}
 
 	tokenString, err := auth.GenerateJWT(user.ID)
 	if err != nil {
-		return models.WebTokenResponse{}, err
+		return models.WebTokenResponse{}, errors.Wrap(err, "Issue generating the jwt")
 	}
 
 	return models.WebTokenResponse{tokenString}, nil

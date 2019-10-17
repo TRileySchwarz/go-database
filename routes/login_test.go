@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -25,8 +27,15 @@ var TestUser = models.User{
 // Verifies the login route is working as intended
 // Does not test the unhappy path
 func TestLogin(t *testing.T) {
+	// Load the environment variables, this is where things like api keys should be stored.
+	// Can also store constants shared by multiple services
+	err := godotenv.Load("../.env")
+	if err != nil {
+		panic(errors.Wrap(err, "Could not load .env file"))
+	}
+
 	// Connect to the database
-	err := db.InitLocalDatabase()
+	err = db.InitLocalDatabase()
 	if err != nil {
 		t.Fatalf("Could not initialize database connection: %v", err)
 	}

@@ -93,7 +93,6 @@ The payload:
 ### TODO
 
 - Implement rate limit for ip
-- Add better error handling
 - Add automated testing for docker-compose updates
 - Build super rough UI / front end service in react
 - Nginx reverse proxy 
@@ -102,5 +101,5 @@ The payload:
 - Password verification of difficulty, eg. longer than 10 characters
 - Verify Volume files are working as intended
 - Write postman tests
-- Remove panics in favour of useful error messages
+- Provide command line args for port numbers
 

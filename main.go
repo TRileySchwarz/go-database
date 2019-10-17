@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/routes"
+	"github.com/pkg/errors"
 	"github.com/joho/godotenv"
-	"log"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -14,35 +15,42 @@ func main() {
 	// Can also store constants shared by multiple services
 	err := godotenv.Load()
 	if err != nil {
-		panic(err)
+		panic(errors.Wrap(err, "Could not load .env file"))
 	}
+
+	apiPort := os.Getenv("API_PORT")
 
 	// Initialize the database and create corresponding rows
 	err = db.InitDatabase()
 	if err != nil {
-		fmt.Printf("\nThere is db error on initialize: %v", err)
-	} else {
-		fmt.Println("Connection to the database successful")
+		panic(errors.Wrap(err, "There was an error initializing the database connection"))
 	}
+	fmt.Println("\nConnection to the database successful")
 
 	// Defer closing the database when the program exits
 	defer func() {
 		err = db.DataBase.Close()
 		if err != nil {
-			fmt.Printf("\nThere is db error on close: %v", err)
+			fmt.Printf("\nError closing the db connection: %v", err)
 		}
 	}()
 
-	// Assign the router handlers for this particular API
-	http.HandleFunc("/signup", routes.HandleSignUp)
-	http.HandleFunc("/login", routes.HandleLogin)
-	http.HandleFunc("/users", routes.HandleUsers)
-
 	// Initialize the API and prepare to handle requests
-	fmt.Println("Starting the API Service...")
-	fmt.Println("API is being served on port: 8080")
-	err = http.ListenAndServe(":8080", nil)
+	fmt.Println("Starting the API Service on port: " + apiPort)
+	err = http.ListenAndServe(":" + apiPort, handler())
 	if err != nil {
-		log.Print(err)
+		panic(errors.Wrap(err, "Could not listen and serve on port: " + apiPort))
 	}
+}
+
+// http handler we will be using to route API calls
+func handler() http.Handler {
+	r := http.NewServeMux()
+
+	// Assign the router handlers for this particular API
+	r.HandleFunc("/signup", routes.HandleSignUp)
+	r.HandleFunc("/login", routes.HandleLogin)
+	r.HandleFunc("/users", routes.HandleUsers)
+
+	return r
 }
