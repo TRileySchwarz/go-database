@@ -79,7 +79,8 @@ type Password struct {
 	ContainsLength bool
 }
 
-// ProcessPassword will parse the password and populate the Password struct attributes.
+// ProcessPassword will parse the password and populate the Password struct attributes
+// this helps check the strength of a potential password
 func ProcessPassword(password string) *Password {
 	p := &Password{Pass: password, Length: len(password)}
 

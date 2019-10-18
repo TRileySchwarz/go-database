@@ -72,6 +72,8 @@ func getUsers() ([]models.User, error) {
 }
 
 // Helper function to remove the passwords from the struct slice before returning it
+// Could adjust the json fields inside of the struct definition, but that would mean changing request
+// body to something like postform vs json encoded
 func removePasswords(users []models.User) []models.UserNoPwd {
 	var usersToReturn []models.UserNoPwd
 
