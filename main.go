@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/routes"
-	"github.com/pkg/errors"
 	"github.com/joho/godotenv"
+	"github.com/pkg/errors"
 	"net/http"
 	"os"
 )

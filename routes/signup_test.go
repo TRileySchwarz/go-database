@@ -53,7 +53,7 @@ func TestSignUp(t *testing.T) {
 
 	// Verify correct status code was received
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("expected status OK; got %v", res.StatusCode)
+		t.Fatalf("expected status OK; got %v instead, with error: %v", res.StatusCode, err)
 	}
 
 	// Parse body of the response

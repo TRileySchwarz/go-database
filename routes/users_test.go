@@ -34,16 +34,16 @@ var TestUsers = []models.User{{
 	},
 }
 
-var TestUsersNoPwd = []models.UserNoPwd{{
-		Email:        "Piccolo@gmail.com",
+var TestUsersNoPwd = []models.User{{
+		ID:        "Piccolo@gmail.com",
 		FirstName: "Piccolo",
 		LastName:  "1",
 	}, {
-		Email:        "Goku@gmail.com",
+		ID:        "Goku@gmail.com",
 		FirstName: "Goku",
 		LastName:  "2",
 	}, {
-		Email:        "Frieza@gmail.com",
+		ID:        "Frieza@gmail.com",
 		FirstName: "Frieza",
 		LastName:  "3",
 	},
@@ -101,7 +101,7 @@ func TestUsersGet(t *testing.T) {
 		}
 
 		// Unmarshal the body so we can verify its contents
-		var response []models.UserNoPwd
+		var response []models.User
 		err = json.Unmarshal(body, &response)
 		if err != nil {
 			t.Fatalf("there was an error marshalling the body of the response: %v", err)
@@ -191,15 +191,15 @@ func TestUsersPut(t *testing.T) {
 	}
 
 	// Unmarshal the body so we can verify its contents
-	var response []models.UserNoPwd
+	var response []models.User
 	err = json.Unmarshal(body, &response)
 	if err != nil {
 		t.Fatalf("there was an error marshalling the body of the response: %v", err)
 	}
 
 	// The expected result with the first and last name switched
-	userExpected := []models.UserNoPwd{{
-			Email:     TestUser.ID,
+	userExpected := []models.User{{
+			ID:     TestUser.ID,
 			FirstName: TestUser.LastName,
 			LastName:  TestUser.FirstName,
 		},

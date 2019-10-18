@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -19,10 +20,26 @@ type User struct {
 //	Timestamp uint `json:"timestamp"`
 //}
 
-type UserNoPwd struct {
-	Email     string `json:"email"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
+func (u *User) MarshalJSON() ([]byte, error) {
+	type UserAlias User
+
+	//fmt.Printf("\n\n This is the user values before Marshal: %v \n\n", u)
+
+	// Alias the User struct and overloading the Password field to omitempty
+	// This allows us to Unmarshal with a password field, but when Marshalling,
+	// it is omited and not part of http response body
+	safeUser := struct {
+		// This json tag needs to be the same, or it wont have the desired affect
+		Password string `json:"password,omitempty"`
+		UserAlias }{
+		UserAlias: UserAlias(*u),
+		// Because there is no password declared in this literal it is considered empty, thus omited
+	}
+
+	//test, _ := json.Marshal(safeUser)
+	//fmt.Printf("\n\n This is the user values after Marshal: %v \n\n", string(test))
+
+	return json.Marshal(safeUser)
 }
 
 type WebTokenResponse struct {
@@ -30,7 +47,7 @@ type WebTokenResponse struct {
 }
 
 type GetUserResponse struct {
-	Users []UserNoPwd `json:"users"`
+	Users []User `json:"users"`
 }
 
 type PutUserRequest struct {

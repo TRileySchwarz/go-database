@@ -41,11 +41,8 @@ func handleGetUsers(w http.ResponseWriter) {
 		return
 	}
 
-	// Remove all the passwords from the struct before returning it
-	resp := removePasswords(u)
-
 	// Marshal the response before returning it
-	respJSON, err := json.Marshal(resp)
+	respJSON, err := json.Marshal(u)
 	if err != nil {
 		SetResponse(w, err, http.StatusBadRequest)
 		return
@@ -69,25 +66,6 @@ func getUsers() ([]models.User, error) {
 	}
 
 	return u, nil
-}
-
-// Helper function to remove the passwords from the struct slice before returning it
-// Could adjust the json fields inside of the struct definition, but that would mean changing request
-// body to something like postform vs json encoded
-func removePasswords(users []models.User) []models.UserNoPwd {
-	var usersToReturn []models.UserNoPwd
-
-	for k := range users {
-		userToAppend := models.UserNoPwd{
-			Email:     users[k].ID,
-			FirstName: users[k].FirstName,
-			LastName:  users[k].LastName,
-		}
-
-		usersToReturn = append(usersToReturn, userToAppend)
-	}
-
-	return usersToReturn
 }
 
 // Responsible for handling the PUT version of /users
