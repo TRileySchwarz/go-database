@@ -90,15 +90,28 @@ The payload:
 
 
 
-### TODO
+### TODO Frontend
+- Get the react app running on DO Droplet
+- Switch the ports of react app to be port 81,
+- Get the basic backend http Server handler to run on port 82(instead of 81 as currently)
+- Update nginx router
+- Ensure chadchillbro.com points to react app, not the basic backend anymore
+- Get the API to frontend to make http call to port 82 backend
+- Make https work via nginx
+- Get go-database docker-compose working on the backend on port 82 and allow frontend access
+- Combine frontend docker-compose file and go-database together
+- Connect the front end in such a way that now only connections from within the server are allowed, ie API is not public
+- Deny all port requests other than chadchillbro.com
+- Create public api at api.chadchillbro.com   
+
+
+### TODO Backend
 
 - Implement rate limit for ip
 - Add automated testing for docker-compose updates
-- Build super rough UI / front end service in react
-- Nginx reverse proxy 
-- Forward DNS
 - Build exec watcher to auto docker-compose build
 - Verify Volume files are working as intended
 - Write postman tests
 - Provide command line args for port numbers
+
 
