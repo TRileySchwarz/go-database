@@ -91,8 +91,10 @@ The payload:
 
 
 ### TODO Frontend
+- Modify docker-compose to remove troublesome env variables, production deployment causing issues
+- Convert api.chadchillbro.com to server up th
 - Get the API to frontend to make http call to port 82 backend
-- Make https work via nginx
+- Make https work via nginx / lets encrypt
 - Get go-database docker-compose working on the backend on port 82 and allow frontend access
 - Combine frontend docker-compose file and go-database together
 - Connect the front end in such a way that now only connections from within the server are allowed, ie API is not public
