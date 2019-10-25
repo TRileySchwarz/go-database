@@ -90,16 +90,18 @@ The payload:
 
 
 
-### TODO Frontend
-- Modify docker-compose to remove troublesome env variables, production deployment causing issues
-- Convert api.chadchillbro.com to server up th
-- Get the API to frontend to make http call to port 82 backend
-- Make https work via nginx / lets encrypt
-- Get go-database docker-compose working on the backend on port 82 and allow frontend access
-- Combine frontend docker-compose file and go-database together
-- Connect the front end in such a way that now only connections from within the server are allowed, ie API is not public
-- Deny all port requests other than chadchillbro.com
-- Create public api at api.chadchillbro.com   
+### TODO 
+- Make https work via nginx / lets encrypt 
+- Make front end not look ridiculous
+- Update Documentation
+- Create some sort of deployment controls
+- Make script or methodology for updating api
+- Attempt to make Go application images smaller(delete everything except executable in the dockerfile?)
+- Make docker - compose more robust, include always restart flags
+- Add more logs for $docker container logs
+
+
+
 
 
 ### TODO Backend
@@ -107,8 +109,6 @@ The payload:
 - Implement rate limit for ip
 - Add automated testing for docker-compose updates
 - Build exec watcher to auto docker-compose build
-- Verify Volume files are working as intended
 - Write postman tests
-- Provide command line args for port numbers
 
 

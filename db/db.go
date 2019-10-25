@@ -12,6 +12,7 @@ var DataBase *pg.DB
 
 // Initializes the connection to the database
 func InitDatabase() error {
+	// This knows to us db via aliasing inside of the docker-compose.yml host / network settings
 	ConnectDatabase("db:" + os.Getenv("DB_PORT"))
 
 	err := createSchema(DataBase)
