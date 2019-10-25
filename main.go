@@ -33,6 +33,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("\nError closing the db connection: %v", err)
 		}
+		fmt.Println("The database connection has been closed")
 	}()
 
 	// Initialize the API and prepare to handle requests

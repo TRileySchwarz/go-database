@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    env_file:
+      - .env
+    ports:
+      - "$DB_PORT:$DB_PORT"
+  app:
+    image: trileyschwarz/go-database
+    command: ["./wait-for-it.sh", "db:$DB_PORT", "--", "./main"]
+    ports:
+      - "$API_PORT:$API_PORT"
+    depends_on:
+      - db
+    links:
+      - db
