@@ -93,6 +93,7 @@ The payload:
 ### TODO 
 - Make front end not look ridiculous
 - Update Documentation
+- Setup a environment variable to check for production / development, to change the schema temporary values to false/true
 - Create some sort of deployment controls
 - Make script or methodology for updating api
 - Attempt to make Go application images smaller(delete everything except executable in the dockerfile?)
