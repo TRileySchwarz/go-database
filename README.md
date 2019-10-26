@@ -91,14 +91,16 @@ The payload:
 
 
 ### TODO 
-- Make https work via nginx / lets encrypt 
 - Make front end not look ridiculous
 - Update Documentation
+- Setup a environment variable to check for production / development, to change the schema temporary values to false/true
 - Create some sort of deployment controls
 - Make script or methodology for updating api
 - Attempt to make Go application images smaller(delete everything except executable in the dockerfile?)
 - Make docker - compose more robust, include always restart flags
 - Add more logs for $docker container logs
+- Create script to migrate database in the event of updating production server
+- Figure out why ssh into database is not working or showing tables
 
 
 
