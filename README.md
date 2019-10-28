@@ -1,6 +1,8 @@
 # go-database
 This project contains a Golang database implementation that serves as an example to how someone might look at implementing docker / postgres / JWT etc. 
 
+The API is currently live on https://www.api.chadchillbro.com/ 
+
 This API defaults to port 8080 for the app, and 5432 with the postgres. Ensure these ports are not in use.
 The payloads are to be sent via a raw transaction, not URL encoded etc. 
 
