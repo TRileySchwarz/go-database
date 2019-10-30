@@ -1,0 +1,15 @@
+language: go
+
+os: linux
+
+go:
+- "1.13.3"
+
+services: 
+- postgresql
+
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres -W my_password
+
+script:
+  - go test -v ./...
