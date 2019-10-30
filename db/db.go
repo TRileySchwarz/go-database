@@ -55,7 +55,8 @@ func ConnectDatabase(addr string) {
 func createSchema(db *pg.DB) error {
 	for _, model := range []interface{}{(*models.User)(nil)} {
 		err := db.CreateTable(model, &orm.CreateTableOptions{
-			Temp: false,
+			// Checks if the app environment has been set to develop
+			Temp: os.Getenv("APP_ENV") == "develop",
 		})
 		if err != nil {
 			return err
