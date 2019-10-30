@@ -9,7 +9,8 @@ services:
 - postgresql
 
 before_script:
-  - psql -c 'create database travis_ci_test;' -U postgres -W my_password
+ - export PGPASSWORD='my_password'; 
+ - psql -c 'create database travis_ci_test;' -U postgres
 
 script:
   - go test -v ./...
