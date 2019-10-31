@@ -38,9 +38,9 @@ func main() {
 
 	// Initialize the API and prepare to handle requests
 	fmt.Println("Starting the API Service on port: " + apiPort)
-	err = http.ListenAndServe(":" + apiPort, handler())
+	err = http.ListenAndServe(":"+apiPort, handler())
 	if err != nil {
-		panic(errors.Wrap(err, "Could not listen and serve on port: " + apiPort))
+		panic(errors.Wrap(err, "Could not listen and serve on port: "+apiPort))
 	}
 }
 

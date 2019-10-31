@@ -56,7 +56,7 @@ func createSchema(db *pg.DB) error {
 	for _, model := range []interface{}{(*models.User)(nil)} {
 		err := db.CreateTable(model, &orm.CreateTableOptions{
 			// Checks if the app environment has been set to develop
-			Temp: os.Getenv("APP_ENV") == "develop",
+			Temp: os.Getenv("APP_ENV") != "production",
 		})
 		if err != nil {
 			return err

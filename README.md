@@ -4,6 +4,7 @@ This project contains a Golang database implementation that serves as an example
 The API is currently live on https://www.api.chadchillbro.com/ 
 
 This API defaults to port 8080 for the app, and 5432 with the postgres. Ensure these ports are not in use.
+Also make sure for some really weird reason you dont have an env variable called APP_ENV="production"...
 The payloads are to be sent via a raw transaction, not URL encoded etc. 
 
 From the project root
@@ -93,17 +94,16 @@ The payload:
 
 
 ### TODO 
-- Make front end not look ridiculous
 - Update Documentation
-- Setup a environment variable to check for production / development, to change the schema temporary values to false/true
+- Add deployment for succesful Travis builds / tests
 - Create some sort of deployment controls
 - Make script or methodology for updating api
 - Attempt to make Go application images smaller(delete everything except executable in the dockerfile?)
 - Make docker - compose more robust, include always restart flags
 - Add more logs for $docker container logs
 - Create script to migrate database in the event of updating production server
+- Create scripts for doing option 2/3 of update production
 - Figure out why ssh into database is not working or showing tables
-
 
 
 

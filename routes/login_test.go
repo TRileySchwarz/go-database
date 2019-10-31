@@ -11,10 +11,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/TRileySchwarz/go-database/auth"
 	"github.com/TRileySchwarz/go-database/db"
 	"github.com/TRileySchwarz/go-database/models"
 	"github.com/TRileySchwarz/go-database/routes"
-	"github.com/TRileySchwarz/go-database/auth"
 )
 
 var TestUser = models.User{
