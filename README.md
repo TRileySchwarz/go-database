@@ -104,6 +104,7 @@ The payload:
 - Create script to migrate database in the event of updating production server
 - Create scripts for doing option 2/3 of update production
 - Figure out why ssh into database is not working or showing tables
+- Fix issue where deploy script only works if ther is currently an active app and db working.... 
 
 
 
